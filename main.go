@@ -18,5 +18,5 @@ func main() {
 		fmt.Println(err.Error())
 	}
 	fmt.Println(cfg.DbUrl)
-	fmt.Println(cfg.Username)
+	fmt.Println(cfg.CurrentUsername)
 }
