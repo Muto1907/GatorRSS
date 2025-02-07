@@ -33,6 +33,7 @@ func main() {
 	commands := command.Commands{Handlers: make(map[string]func(*config.State, command.Command) error)}
 	commands.Register("login", command.HandlerLogin)
 	commands.Register("register", command.HandlerRegister)
+	commands.Register("reset", command.HandlerReset)
 	cmd := command.Command{Name: args[1], Args: args[2:]}
 	err = commands.Run(state, cmd)
 

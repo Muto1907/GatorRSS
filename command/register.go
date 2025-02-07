@@ -33,5 +33,5 @@ func HandlerRegister(s *config.State, cmd Command) error {
 }
 
 func userToString(usr database.User) string {
-	return fmt.Sprintf("id: %v,\n name: %s,\n createdAt: %v,\n updatedAt: %v\n", usr.ID, usr.Name, usr.CreatedAt, usr.UpdatedAt)
+	return fmt.Sprintf("id: %v,\nname: %s,\ncreatedAt: %v,\nupdatedAt: %v\n", usr.ID, usr.Name, usr.CreatedAt, usr.UpdatedAt)
 }
