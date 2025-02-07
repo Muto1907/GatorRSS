@@ -1,11 +1,14 @@
 package main
 
 import (
+	"database/sql"
 	"log"
 	"os"
 
 	"github.com/Muto1907/GatorRSS/command"
 	"github.com/Muto1907/GatorRSS/internal/config"
+	"github.com/Muto1907/GatorRSS/internal/database"
+	_ "github.com/lib/pq"
 )
 
 func main() {
@@ -26,5 +29,7 @@ func main() {
 	if err != nil {
 		log.Fatalf("Login failed: %v", err)
 	}
-
+	db, err := sql.Open("postgres", cfg.DbUrl)
+	dbQueries := database.New(db)
+	state.Db = dbQueries
 }
