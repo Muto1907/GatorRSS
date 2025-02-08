@@ -2,7 +2,6 @@ package main
 
 import (
 	"database/sql"
-	"fmt"
 	"log"
 	"os"
 
@@ -17,7 +16,6 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Printf("%s\n", cfg.DbUrl)
 	state := &config.State{Config: &cfg}
 	db, err := sql.Open("postgres", cfg.DbUrl)
 	if err != nil {
@@ -34,6 +32,7 @@ func main() {
 	commands.Register("login", command.HandlerLogin)
 	commands.Register("register", command.HandlerRegister)
 	commands.Register("reset", command.HandlerReset)
+	commands.Register("users", command.HandlerListUsers)
 	cmd := command.Command{Name: args[1], Args: args[2:]}
 	err = commands.Run(state, cmd)
 
