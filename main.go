@@ -36,6 +36,8 @@ func main() {
 	commands.Register("agg", command.HandleAgg)
 	commands.Register("addfeed", command.HandlerAddFeed)
 	commands.Register("feeds", command.HandlerListFeeds)
+	commands.Register("follow", command.HandlerFollow)
+	commands.Register("following", command.HandlerFollowing)
 	cmd := command.Command{Name: args[1], Args: args[2:]}
 	err = commands.Run(state, cmd)
 
