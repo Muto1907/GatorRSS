@@ -5,15 +5,12 @@ import (
 	"fmt"
 
 	"github.com/Muto1907/GatorRSS/internal/config"
+	"github.com/Muto1907/GatorRSS/internal/database"
 )
 
-func HandlerFollowing(s *config.State, cmd Command) error {
+func HandlerFollowing(s *config.State, cmd Command, user database.User) error {
 	if len(cmd.Args) != 0 {
 		return fmt.Errorf("usage: following")
-	}
-	user, err := s.Db.GetUser(context.Background(), s.Config.CurrentUsername)
-	if err != nil {
-		return fmt.Errorf("couldn't fetch user: %w", err)
 	}
 	followList, err := s.Db.GetFeedFollowsForUser(context.Background(), user.ID)
 	if err != nil {

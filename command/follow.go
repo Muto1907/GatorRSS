@@ -10,17 +10,13 @@ import (
 	"github.com/google/uuid"
 )
 
-func HandlerFollow(s *config.State, cmd Command) error {
+func HandlerFollow(s *config.State, cmd Command, user database.User) error {
 	if len(cmd.Args) != 1 {
 		return fmt.Errorf("usage: follow <feed_url>")
 	}
 	feed, err := s.Db.GetFeedByURL(context.Background(), cmd.Args[0])
 	if err != nil {
 		return fmt.Errorf("couldn't fetch feed: %w", err)
-	}
-	user, err := s.Db.GetUser(context.Background(), s.Config.CurrentUsername)
-	if err != nil {
-		return fmt.Errorf("couldn't fetch user: %w", err)
 	}
 	params := database.CreateFeedFollowParams{
 		ID:        uuid.New(),
