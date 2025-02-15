@@ -30,10 +30,13 @@ func ScrapeFeeds(s *config.State) error {
 		return fmt.Errorf("couldn't fetch feed: %w", err)
 	}
 	for _, item := range feed.Channel.Item {
-		pTime, err := time.Parse(time.RFC1123, item.PubDate)
+		publishedAt := sql.NullTime{}
+		pTime, err := time.Parse(time.RFC1123Z, item.PubDate)
 		if err != nil {
 			return fmt.Errorf("couldn't parse time of the post: %w", err)
 		}
+		publishedAt.Time = pTime
+		publishedAt.Valid = true
 		params := database.CreatePostParams{
 			ID:          uuid.New(),
 			CreatedAt:   time.Now().UTC(),
@@ -41,11 +44,11 @@ func ScrapeFeeds(s *config.State) error {
 			Title:       item.Title,
 			Url:         item.Link,
 			Description: item.Description,
-			PublishedAt: sql.NullTime{Time: pTime},
+			PublishedAt: publishedAt,
 			FeedID:      nextFeed.ID,
 		}
 		_, err = s.Db.CreatePost(context.Background(), params)
-		if err != nil {
+		if err != nil && err.Error() != `pq: duplicate key value violates unique constraint "posts_url_key"` {
 			return fmt.Errorf("couldn't Create Post: %w", err)
 		}
 	}
