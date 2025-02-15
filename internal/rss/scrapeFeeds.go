@@ -8,6 +8,7 @@ import (
 
 	"github.com/Muto1907/GatorRSS/internal/config"
 	"github.com/Muto1907/GatorRSS/internal/database"
+	"github.com/google/uuid"
 )
 
 func ScrapeFeeds(s *config.State) error {
@@ -28,10 +29,25 @@ func ScrapeFeeds(s *config.State) error {
 	if err != nil {
 		return fmt.Errorf("couldn't fetch feed: %w", err)
 	}
-	fmt.Printf("Articles of %s\n", feed.Channel.Title)
 	for _, item := range feed.Channel.Item {
-		fmt.Printf("%s\n", item.Title)
+		pTime, err := time.Parse(time.RFC1123, item.PubDate)
+		if err != nil {
+			return fmt.Errorf("couldn't parse time of the post: %w", err)
+		}
+		params := database.CreatePostParams{
+			ID:          uuid.New(),
+			CreatedAt:   time.Now().UTC(),
+			UpdatedAt:   time.Now().UTC(),
+			Title:       item.Title,
+			Url:         item.Link,
+			Description: item.Description,
+			PublishedAt: sql.NullTime{Time: pTime},
+			FeedID:      nextFeed.ID,
+		}
+		_, err = s.Db.CreatePost(context.Background(), params)
+		if err != nil {
+			return fmt.Errorf("couldn't Create Post: %w", err)
+		}
 	}
-	fmt.Println("----------------------------------------")
 	return nil
 }
