@@ -5,7 +5,7 @@ Postgresql and Go is required to run this program
 ## Installation
 Install gator through following command:
 ```bash
-go install GatoRSS
+go install GatorRSS
 ```
 ## SetUp
 For the SetUp Create a .gatorconfig.json with your postgres connectionstring like this:
